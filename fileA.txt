@@ -1,0 +1,3 @@
+Hey! This is my first commit of git learning.
+Hey! forgot to add this line after adding file to satgging area that is after performing git add command.
+Till the the time we havent staged, remove the newly added line from file using git restore command, that is we can change the file to original phase.
