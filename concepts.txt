@@ -1,0 +1,19 @@
+Creating ssh key
+
+Go to ~/.ssh directory and type  ssh-keygen -t ed25519 -C "krankit777@gmail.com"
+Then it will ask for Enter file in which to save the key (/Users/ankitpoddar/.ssh/id_ed25519): 
+Enter githubssh
+Go to root directory enter chmod 600 ~/.ssh/githubssh
+Again enter hmod 644 ~/.ssh/githubssh.pub
+Enter eval "$(ssh-agent -s)"
+It will give output Agent pid 26996
+Enter ssh-add ~/.ssh/githubssh
+Enter ssh-add -l
+Enter cat ~/.ssh/githubssh.pub —— copy whole line and add this line in ssh key in GitHub.com
+
+Go to your repository
+git branch -M main
+Enter git remote add origin git@github.com:crypto-ankit/Git-Learnig.git
+Enter git remote set-url origin git@github.com:crypto-ankit/Git-Learnig.git
+Enter ssh -T git@github.com
+git push -u origin main
