@@ -46,3 +46,5 @@ Which should you use?
 	•	Scenario 1 → If you plan to keep working on branch1 locally → create a local branch and track it.
 	•	Scenario 2 → If you only want a one-time push (but keep working on main).
 
+now i want to push code on branch that doesnt exist on remote
+git push -u origin testBranch1
