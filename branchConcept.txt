@@ -1,0 +1,1 @@
+creating file directly on remote manually and then need to get this branch in my local for the scenario lets say someone else has pushed the code on this branch and this branch i dont have locally and i need this branch then how to do it.
