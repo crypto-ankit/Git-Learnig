@@ -1,0 +1,120 @@
+lets take a scenario where i have 4 to 5 commits in a branch and i have deployed my latest deployed code but after deploying i got some issue in latest commit, now what i need to do i need to go back on 
+previous commit or any other commit and deploy that code. what is the way of doing that.
+Example repo state A --- B --- C --- D --- E   (main, HEAD)
+	•	E = latest commit (deployed, but broken ❌).
+	•	You want to rollback to D (the last good commit ✅).
+
+
+Identify commits
+git log --oneline
+Example output:
+abc123 (HEAD -> main) Fix bug (E)
+def456 Add feature (D)
+789abc Improve UI (C)
+
+ Quick rollback (hot deploy old commit)
+If you just want to deploy D code immediately:
+git checkout def456
+Your working directory now contains code from commit D.
+Deploy this code to production. You are in detached HEAD state. That’s fine for deployment but not good for long-term.
+
+rollback in history
+Revert commit E (safe for team projects)
+git checkout main
+git revert abc123   # this is commit E’s hash
+git push origin main
+Creates a new commit F that undoes E.
+History now looks like:
+A --- B --- C --- D --- E --- F (main, HEAD)
+                        ^ revert of E
+Production matches D, but history is preserved.
+Best when working in a team,
+
+What git revert does
+When you run:
+git checkout main
+git revert abc123    # abc123 = commit E
+Git doesn’t delete commit E. Instead:
+	•	It creates a brand new commit (F) that does the opposite changes of commit E.
+	•	That means:
+	•	If E added a line → F removes it.
+	•	If E deleted a line → F adds it back.
+	•	If E modified a file → F reverts it.
+So now history looks like this:
+A --- B --- C --- D --- E --- F   (main, HEAD)
+                                ^
+                                |
+                        new commit "Revert E"
+	•	Production code = same as D.
+	•	But history shows everything:
+	•	“We made commit E.”
+	•	“Then we reverted it with commit F.”
+
+✅ This is why revert is safe for teams → no history rewriting, everyone’s history stays consistent.
+
+✅ So the rule is:
+	•	git revert <commit> = “take the diff that commit introduced, and apply the opposite of that diff to the current state (HEAD).”
+
+That’s why revert is so powerful — you can run it at any point in history and it will still just apply a patch to your current branch.
+
+
+
+
+Situation:- below is the initial state
+A --- B --- C --- D --- E   (main)
+what i need to do i need to quicky deploy commit D and again start working and fixing E what should i do revert or checkout to D?
+Quick rollback for deployment (fast recovery)
+Do not revert yet, just checkout D and deploy:
+git checkout D
+# now working directory has commit D's code
+# build/deploy this to production
+his is the fastest way to get production stable again.
+You’re in detached HEAD state, but that’s fine for deployment.
+Step 2: Keep working on fixes in main
+
+Stay on main (which is still pointing at E).
+Fix the bug in commit E, then commit the fix:
+git checkout main
+# fix code
+git commit -m "Fix issue introduced in E"
+git push origin main
+Now history is:
+A --- B --- C --- D --- E --- F   (main, HEAD)
+                                ^
+                                fix commit
+
+
+
+	•	Production is running D.
+	•	Repo history has E (bad) and F (fix).
+
+When you’re confident F works, redeploy main to production.
+
+History before revert
+A --- B --- C --- D (HEAD -> main)
+	•	B introduced some changes.
+	•	C was created on top of B, so yes, C’s snapshot contains A + B + C changes.
+	•	D snapshot = A + B + C + D.
+
+After git revert B
+A --- B --- C --- D --- E (HEAD -> main)
+            ^
+            |
+     new commit E = "undo B"
+Now the important part:
+	•	git revert B does not remove commit B from history.
+	•	It just applies the inverse of commit B’s changes on top of current HEAD (D).
+	•	So working directory after E looks like:
+(A + B + C + D) - (changes introduced by B)
+
+🔹 Does C’s code change too?
+
+👉 No.
+	•	C still exists in history exactly as it was (A + B + C).
+	•	But when you’re at E, your code = “A + C + D, without B’s changes”.
+
+So:
+	•	C itself doesn’t get rewritten.
+	•	But the active working tree (at E) no longer includes the effects of B.
+
+
