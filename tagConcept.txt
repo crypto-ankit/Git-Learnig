@@ -1,0 +1,1 @@
+checkout to specific tag and then checkout to one branch from that tag and then making commit to that branch.
