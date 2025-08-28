@@ -1,0 +1,31 @@
+🔹 git branch -d <branch>
+	•	-d = delete safely.
+	•	Git checks if the branch you’re deleting has been fully merged into its upstream (e.g., main or the branch you’re on).
+	•	If it has been merged → branch pointer is deleted.
+	•	If it hasn’t been merged → Git refuses, to avoid losing commits.
+
+Example:
+A --- B --- C --- D   (main, HEAD)
+       \
+        E --- F   (featureX)
+git branch -d featureX
+error: The branch 'featureX' is not fully merged.
+If you are sure you want to delete it, run 'git branch -D featureX'.
+
+git branch -D <branch>
+	•	-D = force delete.
+	•	Git deletes the branch pointer even if it has unmerged commits.
+	•	The commits (E, F) still exist in the repo, but they become dangling (reachable only from git reflog until garbage-collected).
+
+Example:
+A --- B --- C --- D   (main, HEAD)
+       \
+        E --- F   (dangling now after -D)
+Summary
+	•	-d → safe delete (only if merged).
+	•	-D → force delete (branch removed regardless of merge status).
+	•	Commits aren’t deleted immediately, but they’ll be garbage-collected later if no refs/tags point to them.
+
+Best practice in teams:
+	•	Use -d by default.
+	•	Use -D only if you’re sure the branch isn’t needed anymore.
