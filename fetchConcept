@@ -2,3 +2,4 @@ This branch has been created on remote 1st and then commit on remote. After that
 git fetch origin
 git checkout 2608_OnRemote1st
 git push -u origin 2608_OnRemote1st
+from now onwards u can directly do git push
