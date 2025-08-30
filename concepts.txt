@@ -17,3 +17,34 @@ Enter git remote add origin git@github.com:crypto-ankit/Git-Learnig.git
 Enter git remote set-url origin git@github.com:crypto-ankit/Git-Learnig.git
 Enter ssh -T git@github.com
 git push -u origin main
+
+now on remote existing repo i have created one another branch branch1 but it in local i am still in main and upstream has been set for main in remote how to push code on branch1 branch
+Scenario 1: You want to create/use a local branch named branch1, This way, your local branch1 is directly linked to remote origin/branch1.
+# Fetch latest remote branches
+git fetch origin
+
+# Create local branch from remote branch1
+git checkout -b branch1 origin/branch1
+# or with new syntax
+git switch -c branch1 origin/branch1
+
+# Now you are on branch1 locally
+# Make changes, commit, then push
+git push -u origin branch1
+
+Scenario 2: You want to push your local main branch into remote branch1
+git push origin main:branch1
+Explanation:
+	•	main = local branch you’re on.
+	•	branch1 = remote branch to update.
+
+This tells Git: “Push my local main branch into remote’s branch1 branch.”
+
+Your local branch will still be main, it won’t switch.
+
+Which should you use?
+	•	Scenario 1 → If you plan to keep working on branch1 locally → create a local branch and track it.
+	•	Scenario 2 → If you only want a one-time push (but keep working on main).
+
+now i want to push code on branch that doesnt exist on remote
+git push -u origin testBranch1
