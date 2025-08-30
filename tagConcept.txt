@@ -1,0 +1,3 @@
+checkout to specific tag and then checkout to one branch from that tag and then making commit to that branch.
+A tag is a static label that marks a specific commit. It doesnt move like branch, even if you have made changes on any commit that is tagged, tag is gonna points to that older commit only 
+not newly commit which you have done on top of older commit.
